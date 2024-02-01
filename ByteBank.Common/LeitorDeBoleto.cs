@@ -11,6 +11,19 @@ namespace ByteBank.Common
         public List<Boleto> LerBoletos(string caminhoArquivo)
         {
             throw new NotImplementedException();
+            
+            // montar lista de boletos
+
+            // ler arquivo de boletos
+
+                // ler cabeçalho do arquivo CSV
+
+                // para cada linha do arquivo CSV
+                    // ler dados
+                    // carregar objeto Boleto
+                    // adicionar boleto à lista
+
+            // retornar lista de boletos
         }
 
         private Boleto MapearTextoParaBoleto(string[] nomesPropriedades, string[] valoresPropriedades)
