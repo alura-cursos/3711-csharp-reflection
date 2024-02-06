@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace ByteBank.Common
 {
     public class LeitorDeBoleto
@@ -11,55 +10,33 @@ namespace ByteBank.Common
         public List<Boleto> LerBoletos(string caminhoArquivo)
         {
             // montar lista de boletos
-
             var boletos = new List<Boleto>();
 
-
             // ler arquivo de boletos
-
             using (var reader = new StreamReader(caminhoArquivo))
-
             {
-
                 // ler cabeçalho do arquivo CSV
-
                 string linha = reader.ReadLine();
-
                 string[] cabecalho = linha.Split(',');
 
-
                 // para cada linha do arquivo CSV
-
                 while (!reader.EndOfStream)
-
                 {
-
                     // ler dados
-
                     linha = reader.ReadLine();
-
                     string[] dados = linha.Split(',');
 
-
                     // carregar objeto Boleto
-
                     Boleto boleto = MapearTextoParaBoleto(cabecalho, dados);
 
-
                     // adicionar boleto à lista
-
                     boletos.Add(boleto);
-
                 }
-
             }
 
-
             // retornar lista de boletos
-
             return boletos;
         }
-
         private Boleto MapearTextoParaBoleto(string[] nomesPropriedades, string[] valoresPropriedades)
         {
             Boleto instancia = new Boleto();
