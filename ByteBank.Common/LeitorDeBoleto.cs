@@ -27,7 +27,7 @@ namespace ByteBank.Common
                     string[] dados = linha.Split(',');
 
                     // carregar objeto Boleto
-                    Boleto boleto = MapearTextoParaBoleto(cabecalho, dados);
+                    Boleto boleto = MapearTextoParaObjeto<Boleto>(cabecalho, dados);
 
                     // adicionar boleto à lista
                     boletos.Add(boleto);
@@ -37,22 +37,22 @@ namespace ByteBank.Common
             // retornar lista de boletos
             return boletos;
         }
-        private Boleto MapearTextoParaBoleto(string[] nomesPropriedades, string[] valoresPropriedades)
+        private T MapearTextoParaObjeto<T>(string[] nomesPropriedades, string[] valoresPropriedades)
         {
-            Boleto instancia = new Boleto();
-            instancia.CedenteNome = valoresPropriedades[0];
-            instancia.CedenteCpfCnpj = valoresPropriedades[1];
-            instancia.CedenteAgencia = valoresPropriedades[2];
-            instancia.CedenteConta = valoresPropriedades[3];
-            instancia.SacadoNome = valoresPropriedades[4];
-            instancia.SacadoCpfCnpj = valoresPropriedades[5];
-            instancia.SacadoEndereco = valoresPropriedades[6];
-            instancia.Valor = Convert.ToDecimal(valoresPropriedades[7]);
-            instancia.DataVencimento = Convert.ToDateTime(valoresPropriedades[8]);
-            instancia.NumeroDocumento = valoresPropriedades[9];
-            instancia.NossoNumero = valoresPropriedades[10];
-            instancia.CodigoBarras = valoresPropriedades[11];
-            instancia.LinhaDigitavel = valoresPropriedades[12];
+            T instancia = Activator.CreateInstance<T>();
+            //instancia.CedenteNome = valoresPropriedades[0];
+            //instancia.CedenteCpfCnpj = valoresPropriedades[1];
+            //instancia.CedenteAgencia = valoresPropriedades[2];
+            //instancia.CedenteConta = valoresPropriedades[3];
+            //instancia.SacadoNome = valoresPropriedades[4];
+            //instancia.SacadoCpfCnpj = valoresPropriedades[5];
+            //instancia.SacadoEndereco = valoresPropriedades[6];
+            //instancia.Valor = Convert.ToDecimal(valoresPropriedades[7]);
+            //instancia.DataVencimento = Convert.ToDateTime(valoresPropriedades[8]);
+            //instancia.NumeroDocumento = valoresPropriedades[9];
+            //instancia.NossoNumero = valoresPropriedades[10];
+            //instancia.CodigoBarras = valoresPropriedades[11];
+            //instancia.LinhaDigitavel = valoresPropriedades[12];
             return instancia;
         }
     }
