@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 namespace ByteBank.Common
@@ -40,19 +41,32 @@ namespace ByteBank.Common
         private T MapearTextoParaObjeto<T>(string[] nomesPropriedades, string[] valoresPropriedades)
         {
             T instancia = Activator.CreateInstance<T>();
-            //instancia.CedenteNome = valoresPropriedades[0];
-            //instancia.CedenteCpfCnpj = valoresPropriedades[1];
-            //instancia.CedenteAgencia = valoresPropriedades[2];
-            //instancia.CedenteConta = valoresPropriedades[3];
-            //instancia.SacadoNome = valoresPropriedades[4];
-            //instancia.SacadoCpfCnpj = valoresPropriedades[5];
-            //instancia.SacadoEndereco = valoresPropriedades[6];
-            //instancia.Valor = Convert.ToDecimal(valoresPropriedades[7]);
-            //instancia.DataVencimento = Convert.ToDateTime(valoresPropriedades[8]);
-            //instancia.NumeroDocumento = valoresPropriedades[9];
-            //instancia.NossoNumero = valoresPropriedades[10];
-            //instancia.CodigoBarras = valoresPropriedades[11];
-            //instancia.LinhaDigitavel = valoresPropriedades[12];
+
+            // Percorre os nomes de propriedades.
+
+            for (int i = 0; i < nomesPropriedades.Length; i++)
+            {
+                // Obtém a propriedade atual através do nome.
+                string nomePropriedade = nomesPropriedades[i];
+                PropertyInfo propertyInfo = instancia.GetType().GetProperty(nomePropriedade);
+
+                // Verifica se a propriedade foi encontrada.
+                if (propertyInfo != null)
+                {
+                    // Obtém o tipo da propriedade.
+                    Type propertyType = propertyInfo.PropertyType;
+
+                    // Obtém o valor da propriedade.
+                    string valor = valoresPropriedades[i];
+
+                    // Converte o valor da propriedade para o tipo correto.
+                    object valorConvertido = Convert.ChangeType(valor, propertyType);
+
+                    // Guarda o valor convertido na propriedade.
+                    propertyInfo.SetValue(instancia, valorConvertido);
+                }
+            }
+
             return instancia;
         }
     }
