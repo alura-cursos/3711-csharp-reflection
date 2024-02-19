@@ -34,7 +34,33 @@ namespace ByteBank.Common
         {
             var boletosPorCedente = PegaBoletosAgrupados(boletos);
 
-            Console.WriteLine(JsonConvert.SerializeObject(boletosPorCedente));
+            GravarArquivo(boletosPorCedente);
+        }
+
+        private void GravarArquivo(List<BoletosPorCedente> grupos)
+        {
+            // Obter tipo da classe
+            Type tipo = typeof(BoletosPorCedente);
+
+            // Usar Reflection para obter propriedades
+            PropertyInfo[] propriedades = tipo.GetProperties();
+
+            // Escrever os dados no arquivo CSV
+            using (var sw = new StreamWriter(nomeArquivoSaida))
+            {
+                // Escrever cabeçalho
+                var cabecalho = propriedades.Select(p => p.Name);
+                sw.WriteLine(string.Join(',', cabecalho));
+
+                // Escrever linhas do relatório
+                foreach (var grupo in grupos)
+                {
+                    var valores = propriedades.Select(p => p.GetValue(grupo));
+                    sw.WriteLine(string.Join(',', valores));
+                }
+            }
+
+            Console.WriteLine($"Arquivo '{nomeArquivoSaida}' criado com sucesso!");
         }
 
         private List<BoletosPorCedente> PegaBoletosAgrupados(List<Boleto> boletos)
