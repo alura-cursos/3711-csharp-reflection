@@ -97,9 +97,19 @@ static void ProcessarDinamicamente(string nomeParametroConstrutor, string parame
     var tipoClasseRelatorio = typeof(RelatorioDeBoleto);
     var construtores = tipoClasseRelatorio.GetConstructors();
 
-    foreach (var construtor in construtores)
-    {
-        Console.WriteLine($"Construtor: {construtor.Name}");
-        Console.WriteLine($"  No. de parâmetros: {construtor.GetParameters().Length}");
-    }
+    //foreach (var construtor in construtores)
+    //{
+    //    Console.WriteLine($"Construtor: {construtor.Name}");
+    //    Console.WriteLine($"  No. de parâmetros: {construtor.GetParameters().Length}");
+    //}
+
+    //O construtor desejado deve ter como requisitos:
+    //1. Um único parâmetro
+    //2. Esse parâmetro deve se chamar “nomeArquivoSaida”
+
+    var construtor = construtores
+        .Single(c => c.GetParameters().Length == 1
+        && c.GetParameters().Any(p => p.Name == nomeParametroConstrutor));
+
+    var instanciaClasse = construtor.Invoke(new object[] { parametroConstrutor });
 }
