@@ -112,4 +112,7 @@ static void ProcessarDinamicamente(string nomeParametroConstrutor, string parame
         && c.GetParameters().Any(p => p.Name == nomeParametroConstrutor));
 
     var instanciaClasse = construtor.Invoke(new object[] { parametroConstrutor });
+
+    var metodoProcessar = tipoClasseRelatorio.GetMethod(nomeMetodo);
+    metodoProcessar.Invoke(instanciaClasse, new object[] { parametroMetodo });
 }
