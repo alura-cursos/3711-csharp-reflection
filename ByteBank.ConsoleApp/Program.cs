@@ -1,4 +1,5 @@
 ﻿using ByteBank.Common;
+using System.Reflection;
 using System.Reflection.Emit;
 
 MostrarBanner();
@@ -38,6 +39,7 @@ static void MostrarMenu()
     Console.WriteLine();
     Console.WriteLine("1. Ler arquivo de boletos");
     Console.WriteLine("2. Gravar arquivo com boletos agrupados por cedente");
+    Console.WriteLine("3. Executar Plugins");
     Console.WriteLine();
     Console.Write("Digite o número da opção desejada: ");
 }
@@ -52,6 +54,10 @@ static void ExecutarEscolha(int escolha)
 
         case 2:
             GravarGrupoBoletos();
+            break;
+
+        case 3:
+            ExecutarPlugins();
             break;
 
         default:
@@ -115,4 +121,37 @@ static void ProcessarDinamicamente(string nomeParametroConstrutor, string parame
 
     var metodoProcessar = tipoClasseRelatorio.GetMethod(nomeMetodo);
     metodoProcessar.Invoke(instanciaClasse, new object[] { parametroMetodo });
+}
+
+static void ExecutarPlugins()
+{
+    //Ler boletos a partir do arquivo CSV
+    var leitorDeCSV = new LeitorDeBoleto();
+    List<Boleto> boletos = leitorDeCSV.LerBoletos("Boletos.csv");
+
+    //Obter classes de plugin 
+    List<Type> classesDePlugin = ObterClassesDePlugin<IRelatorio<Boleto>>();
+
+    foreach (var classe in classesDePlugin)
+    {
+        // Criar uma instância do plugin
+        var plugin = Activator.CreateInstance(classe, new object[] { "BoletosPorCedente.csv" });
+
+        // Chamar o método Processar usando Reflection
+        MethodInfo metodoSalvar = classe.GetMethod("Processar");
+        metodoSalvar.Invoke(plugin, new object[] { boletos });
+    }
+}
+
+static List<Type> ObterClassesDePlugin<T>()
+{
+    var tiposEncontrados = new List<Type>();
+
+    // Pegar o assembly que está em execução
+    Assembly assemblyEmExecucao = Assembly.GetExecutingAssembly();
+
+    // Pegar o assembly onde um tipo é declarado
+    Assembly assemblyDosPlugins = typeof(IRelatorio<Boleto>).Assembly;
+
+    return tiposEncontrados;
 }
