@@ -153,5 +153,24 @@ static List<Type> ObterClassesDePlugin<T>()
     // Pegar o assembly onde um tipo é declarado
     Assembly assemblyDosPlugins = typeof(IRelatorio<Boleto>).Assembly;
 
+    //Descobre todos os tipos do assembly
+    var tipos = assemblyDosPlugins.GetTypes();
+
+    foreach (var tipo in tipos)
+    {
+        Console.WriteLine($"Nome: {tipo.Name}");
+        Console.WriteLine($"Nome completo: {tipo.FullName}");
+        Console.WriteLine($"É classe: {tipo.IsClass}");
+        Console.WriteLine($"É interface: {tipo.IsInterface}");
+        Console.WriteLine($"É abstrato: {tipo.IsAbstract}");
+
+        Console.WriteLine("Inferfaces implementadas:");
+        foreach (var interfaceType in tipo.GetInterfaces())
+        {
+            Console.WriteLine($" - {interfaceType.Name}");
+        }
+        Console.WriteLine();
+    }
+
     return tiposEncontrados;
 }
