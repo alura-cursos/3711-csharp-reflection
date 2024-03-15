@@ -135,7 +135,8 @@ static void ExecutarPlugins()
     foreach (var classe in classesDePlugin)
     {
         // Criar uma instância do plugin
-        var plugin = Activator.CreateInstance(classe, new object[] { "BoletosPorCedente.csv" });
+        //var plugin = Activator.CreateInstance(classe, new object[] { "BoletosPorCedente.csv" });
+        var plugin = Activator.CreateInstance(classe);
 
         // Chamar o método Processar usando Reflection
         MethodInfo metodoSalvar = classe.GetMethod("Processar");
@@ -153,6 +154,23 @@ static List<Type> ObterClassesDePlugin<T>()
     // Pegar o assembly onde um tipo é declarado
     Assembly assemblyDosPlugins = typeof(IRelatorio<Boleto>).Assembly;
 
+    var assemblies = ObterAssembliesDePlugis();
+
+    foreach (var assembly in assemblies)
+    {
+        Console.WriteLine($"Assembly encontrado: {assembly.FullName}");
+        IEnumerable<Type> tiposImplementandoT = ObterTiposDoAssembly<T>(assembly);
+
+        tiposEncontrados.AddRange(tiposImplementandoT);
+    }
+
+
+
+    return tiposEncontrados;
+}
+
+static IEnumerable<Type> ObterTiposDoAssembly<T>(Assembly assemblyDosPlugins)
+{
     //Descobre todos os tipos do assembly
     var tipos = assemblyDosPlugins.GetTypes();
 
@@ -176,8 +194,25 @@ static List<Type> ObterClassesDePlugin<T>()
 
     var tiposImplementandoT = tipos.Where(t => typeof(T).IsAssignableFrom(t)
         && t.IsClass && !t.IsAbstract);
-
-    tiposEncontrados.AddRange(tiposImplementandoT);
-
-    return tiposEncontrados;
+    return tiposImplementandoT;
 }
+
+static List<Assembly> ObterAssembliesDePlugis()
+{
+    var assemblies = new List<Assembly>();
+
+    const string diretorio = @"C:\Plugins";
+
+    // Obter todos os arquivos .dll na pasta
+    string[] arquivosDll = Directory.GetFiles(diretorio, "*.dll");
+
+    foreach (var arquivoDll in arquivosDll)
+    {
+        // Carregar o assembly a partir do arquivo DLL
+        var assembly = Assembly.LoadFrom(arquivoDll);
+        assemblies.Add(assembly);
+    }
+
+    return assemblies;
+}
+
