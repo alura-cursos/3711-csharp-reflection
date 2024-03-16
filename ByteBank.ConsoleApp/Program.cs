@@ -154,7 +154,7 @@ static List<Type> ObterClassesDePlugin<T>()
     // Pegar o assembly onde um tipo é declarado
     Assembly assemblyDosPlugins = typeof(IRelatorio<Boleto>).Assembly;
 
-    var assemblies = ObterAssembliesDePlugis();
+    var assemblies = ObterAssembliesDePlugins();
 
     foreach (var assembly in assemblies)
     {
@@ -163,8 +163,6 @@ static List<Type> ObterClassesDePlugin<T>()
 
         tiposEncontrados.AddRange(tiposImplementandoT);
     }
-
-
 
     return tiposEncontrados;
 }
@@ -196,8 +194,8 @@ static IEnumerable<Type> ObterTiposDoAssembly<T>(Assembly assemblyDosPlugins)
         && t.IsClass && !t.IsAbstract);
     return tiposImplementandoT;
 }
-
-static List<Assembly> ObterAssembliesDePlugis()
+                      
+static List<Assembly> ObterAssembliesDePlugins()
 {
     var assemblies = new List<Assembly>();
 
